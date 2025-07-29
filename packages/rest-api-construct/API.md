@@ -4,6 +4,55 @@
 
 ```ts
 
+import * as apiGateway from 'aws-cdk-lib/aws-apigateway';
+import { Construct } from 'constructs';
+import * as lamb from 'aws-cdk-lib/aws-lambda';
+
+// @public (undocumented)
+export type ExistingDirectory = {
+    path: string;
+};
+
+// @public (undocumented)
+export type ExistingLambda = {
+    id: string;
+    name: string;
+};
+
+// @public (undocumented)
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
+
+// @public (undocumented)
+export type LambdaSource = {
+    runtime: lamb.Runtime;
+    source: ExistingDirectory | ExistingLambda | NewFromCode;
+};
+
+// @public (undocumented)
+export type NewFromCode = {
+    code: string;
+};
+
+// @public
+export class RestApiConstruct extends Construct {
+    constructor(scope: Construct, id: string, props: RestApiConstructProps);
+    // (undocumented)
+    readonly api: apiGateway.RestApi;
+}
+
+// @public (undocumented)
+export type RestApiConstructProps = {
+    apiName: string;
+    apiProps: RestApiPathConfig[];
+};
+
+// @public (undocumented)
+export type RestApiPathConfig = {
+    path: string;
+    routes: HttpMethod[];
+    lambdaEntry: LambdaSource;
+};
+
 // (No @packageDocumentation comment for this package)
 
 ```
