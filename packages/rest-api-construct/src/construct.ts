@@ -27,7 +27,7 @@ export class RestApiConstruct extends Construct {
 
     // Iterate over each path configuration
     for (const [index, pathConfig] of Object.entries(props.apiProps)) {
-      const { path, routes, lambdaEntry } = pathConfig;
+      const { path, methods, lambdaEntry } = pathConfig;
       const source = lambdaEntry.source;
 
       // Determine Lambda code source - either ExistingDirectory, NewFromCode, or ExistingLambda (function already exists in aws and does not need to be constructed)
@@ -91,7 +91,7 @@ export class RestApiConstruct extends Construct {
 
       // Add resource and methods for this route
       const resource = this.addNestedResource(this.api.root, path);
-      for (const method of routes) {
+      for (const method of methods) {
         resource.addMethod(method, new apiGateway.LambdaIntegration(handler));
       }
     }
@@ -105,8 +105,16 @@ export class RestApiConstruct extends Construct {
     root: apiGateway.IResource,
     path: string,
   ): apiGateway.IResource {
-    return path.split('/').reduce((resource, part) => {
-      return resource.getResource(part) ?? resource.addResource(part);
-    }, root);
+    // Split the path into parts (e.g. "posts/comments" → ["posts", "comments"])
+    const parts = path.split('/');
+
+    // Traverse the path, adding any missing nested resources along the way
+    let current = root;
+    for (const part of parts) {
+      const existing = current.getResource(part);
+      current = existing ?? current.addResource(part);
+    }
+
+    return current;
   }
 }
