@@ -42,9 +42,28 @@ export class RestApiConstruct extends Construct {
         let resourceFile = null;
         let handlerFile = null;
         try {
+          let pathToFunctionFiles = process.cwd();
+          if (src.directoryToSaveFunctionFilesIn != undefined) {
+            //make sure it starts with a slash
+            if (
+              !src.directoryToSaveFunctionFilesIn.startsWith('\\') &&
+              !src.directoryToSaveFunctionFilesIn.startsWith('/')
+            ) {
+              pathToFunctionFiles += '/';
+            }
+            pathToFunctionFiles += src.directoryToSaveFunctionFilesIn;
+            //make sure it ends with a slash before proceeding
+            if (
+              !pathToFunctionFiles.endsWith('\\') &&
+              !pathToFunctionFiles.endsWith('/')
+            ) {
+              pathToFunctionFiles += '/';
+            }
+          } else {
+            pathToFunctionFiles += '/amplify/functions/';
+          }
+          pathToFunctionFiles += src.functionName;
           //ensure <project>/amplify/functions/<functionName> directory exists
-          const pathToFunctionFiles =
-            process.cwd() + '/amplify/functions/' + src.functionName;
           fs.mkdirSync(pathToFunctionFiles, { recursive: true });
           //create resource.ts, unless it already exists, in which case, it will error and exit (wx flag)
           resourceFile = fs.openSync(

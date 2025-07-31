@@ -76,6 +76,8 @@ void describe('RestApiConstruct Lambda Handling', () => {
             runtime: lambda.Runtime.NODEJS_22_X,
             source: {
               functionName: 'MyFunction2',
+              directoryToSaveFunctionFilesIn:
+                '/packages/rest-api-construct/src/test-assets',
               code: "export const handler = () => {return 'Hello World! This is a new lambda function.';};",
             },
           },
