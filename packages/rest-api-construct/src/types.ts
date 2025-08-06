@@ -1,15 +1,7 @@
-import * as lamb from 'aws-cdk-lib/aws-lambda';
-
-//defines 3 potential sources for Lambda function
-export type ExistingDirectory = { path: string };
-export type ExistingLambda = { id: string; name: string };
-export type NewFromCode = { code: string };
-
-//adds runtime to the source
-export type LambdaSource = {
-  runtime: lamb.Runtime;
-  source: ExistingDirectory | ExistingLambda | NewFromCode;
-};
+import {
+  FunctionResources,
+  ResourceProvider,
+} from '@aws-amplify/backend/types/platform';
 
 export type RestApiConstructProps = {
   apiName: string;
@@ -29,8 +21,7 @@ export type MethodsProps = {
 export type RestApiPathConfig = {
   path: string;
   methods: MethodsProps[];
-  lambdaEntry: LambdaSource;
-  defaultAuthorizer?: AuthorizerConfig;
+  lambdaEntry: ResourceProvider<FunctionResources>;
 };
 
 export type HttpMethod =
